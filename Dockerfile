@@ -28,6 +28,15 @@ COPY --from=builder /go-template/main .
 
 # Application
 ENV APP_PORT="8080"
+# Database credentials
+ENV DB_DRIVER="mysql"
+ENV DB_USER="root"
+ENV DB_PASSWORD=""
+ENV DB_HOST="127.0.0.1"
+ENV DB_PORT="3306"
+ENV DB_NAME="go-temlate"
+ENV DB_CHARSET="utf8"
+ENV DB_MAX_OPEN_CONNS="2"
 
 # アプリケーションを実行
 CMD ["./main"]
