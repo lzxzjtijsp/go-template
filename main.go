@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"go-template/app/middleware"
-	"go-template/env"
 	"os"
 )
 
@@ -15,9 +14,6 @@ func main() {
 
 	// CORS ミドルウェアを使うことで、クロスオリジンリソース共有 (CORS) を許可します。
 	router.Use(middleware.Cors())
-
-	// 環境変数を読み込みます。
-	env.Load()
 
 	// アプリケーションのポート番号を環境変数から取得します。
 	port := os.Getenv("APP_PORT")
