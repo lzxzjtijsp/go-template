@@ -3,17 +3,30 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"go-template/app/middleware"
+	"go-template/env"
+	"os"
 )
 
 import "net/http"
 
 func main() {
-	engine := gin.Default()
-	engine.Use(middleware.Cors())
-	engine.GET("/", func(c *gin.Context) {
+	// gin.Default() は Logger と Recovery ミドルウェアを付けた *Engine を返します。
+	router := gin.Default()
+
+	// CORS ミドルウェアを使うことで、クロスオリジンリソース共有 (CORS) を許可します。
+	router.Use(middleware.Cors())
+
+	// 環境変数を読み込みます。
+	env.Load()
+
+	// アプリケーションのポート番号を環境変数から取得します。
+	port := os.Getenv("APP_PORT")
+
+	router.Use(middleware.Cors())
+	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "hello world",
 		})
 	})
-	engine.Run(":8080")
+	router.Run(":" + port)
 }
