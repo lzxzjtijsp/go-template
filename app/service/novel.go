@@ -2,13 +2,14 @@ package service
 
 import (
 	"fmt"
+	"go-template/app/db"
 	"go-template/app/model"
 )
 
 type NovelService struct{}
 
 func (NovelService) SetNovel(novel *model.Novel) (string, error) {
-	_, err := DbEngine.Insert(novel)
+	_, err := db.DbEngine.Insert(novel)
 	if err != nil {
 		return "0", err
 	}
@@ -17,7 +18,7 @@ func (NovelService) SetNovel(novel *model.Novel) (string, error) {
 
 func (NovelService) GetNovelById(id int) *model.Novel {
 	var novel model.Novel
-	has, err := DbEngine.ID(id).Get(&novel)
+	has, err := db.DbEngine.ID(id).Get(&novel)
 	if err != nil {
 		panic(err)
 	}
@@ -30,7 +31,7 @@ func (NovelService) GetNovelById(id int) *model.Novel {
 
 func (NovelService) GetNovelList() []model.Novel {
 	novels := make([]model.Novel, 0)
-	err := DbEngine.Find(&novels)
+	err := db.DbEngine.Find(&novels)
 	if err != nil {
 		panic(err)
 	}
@@ -38,7 +39,7 @@ func (NovelService) GetNovelList() []model.Novel {
 }
 
 func (NovelService) UpdateNovel(newNovel *model.Novel) error {
-	_, err := DbEngine.ID(newNovel.Id).Update(newNovel)
+	_, err := db.DbEngine.ID(newNovel.Id).Update(newNovel)
 	if err != nil {
 		return err
 	}
@@ -47,7 +48,7 @@ func (NovelService) UpdateNovel(newNovel *model.Novel) error {
 
 func (NovelService) DeleteNovel(id int64) error {
 	novel := new(model.Novel)
-	_, err := DbEngine.ID(id).Delete(novel)
+	_, err := db.DbEngine.ID(id).Delete(novel)
 	if err != nil {
 		return err
 	}

@@ -10,6 +10,14 @@ import (
 )
 
 func RecordUaAndTime(c *gin.Context) {
+	// ディレクトリの存在を確認し、存在しない場合は作成する
+	if _, err := os.Stat("logs"); os.IsNotExist(err) {
+		err := os.Mkdir("logs", 0755)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	logFile, err := os.OpenFile("logs/request.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal(err)

@@ -1,0 +1,49 @@
+services:
+  mysql:
+    build:
+      context: .
+      dockerfile: db/Dockerfile
+      args:
+        - IMAGE_TAG=mysql-image:latest
+    image: 'mysql:8.0'
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_DATABASE: "template"
+    networks:
+      - database
+    restart: always
+    volumes:
+      - "./db/init-scripts:/docker-entrypoint-initdb.d"
+      - db-data:/var/lib/mysql
+
+  app:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+      args:
+        - IMAGE_TAG=app-image:latest
+    networks:
+      - database
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    environment:
+      - APP_PORT=8080
+      - DB_DRIVER=mysql
+      - DB_USER=root
+      - DB_PASSWORD=
+      - DB_PORT=3306
+      - DB_NAME=template
+
+volumes:
+  db-data:
+
+networks:
+  database:
